@@ -3,11 +3,35 @@
 // =====================================================
 
 // Detectar automáticamente la ruta base
-const rutaBase = window.location.pathname.includes('/catalogo-Dgiga/') 
-    ? '/catalogo-Dgiga/' 
-    : '/';
+function getBasePath() {
+    const path = window.location.pathname;
+    
+    // Si estamos en GitHub Pages (nombre del repo)
+    if (path.includes('/catalogo-Dgiga/')) {
+        return '/catalogo-Dgiga/';
+    }
+    
+    // Si estamos en local con XAMPP
+    if (path.includes('/catalogo/')) {
+        return '/catalogo/';
+    }
+    
+    // Si estamos en la raíz local (http://localhost/)
+    if (path === '/' || path === '') {
+        return '/';
+    }
+    
+    // Para otros casos, usar la ruta actual sin el nombre del archivo
+    const partes = path.split('/');
+    partes.pop(); // Eliminar el nombre del archivo (index.html o vacío)
+    return partes.join('/') + '/';
+}
 
-const ARCHIVO_DATOS = rutaBase + 'catalogo.json';
+const BASE_PATH = getBasePath();
+const ARCHIVO_DATOS = BASE_PATH + 'catalogo.json';
+
+console.log('🔍 Ruta base detectada:', BASE_PATH);
+console.log('📁 Cargando datos desde:', ARCHIVO_DATOS);
 
 let todasLasPeliculas = [];
 let peliculasFiltradas = [];
@@ -23,47 +47,82 @@ const inputBuscar = document.getElementById('buscar');
 const selectGenero = document.getElementById('genero');
 const selectAnio = document.getElementById('anio');
 const selectOrden = document.getElementById('orden');
-const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = document.querySelector('.theme-icon');
 
 // =====================================================
-// TEMA (CLARO/OSCURO)
+// TEMA (CLARO/OSCURO) - VERSIÓN MEJORADA
 // =====================================================
 
+// Función para obtener el tema preferido
 function getPreferredTheme() {
+    // 1. Verificar si hay una preferencia guardada en localStorage
     const saved = localStorage.getItem('theme');
-    if (saved) return saved;
+    if (saved === 'dark' || saved === 'light') {
+        console.log('🌓 Tema desde localStorage:', saved);
+        return saved;
+    }
     
+    // 2. Verificar preferencia del sistema
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        console.log('🌓 Tema desde sistema: light');
         return 'light';
     }
+    
+    // 3. Por defecto, oscuro
+    console.log('🌓 Tema por defecto: dark');
     return 'dark';
 }
 
+// Función para aplicar el tema
 function setTheme(theme) {
+    // Aplicar el tema al HTML
     document.documentElement.setAttribute('data-theme', theme);
+    
+    // Guardar en localStorage
     localStorage.setItem('theme', theme);
     
-    if (theme === 'dark') {
-        themeIcon.textContent = '🌙';
-    } else {
-        themeIcon.textContent = '☀️';
+    // Actualizar el ícono del botón
+    const themeIcon = document.querySelector('.theme-icon');
+    if (themeIcon) {
+        if (theme === 'dark') {
+            themeIcon.textContent = '🌙';
+        } else {
+            themeIcon.textContent = '☀️';
+        }
     }
+    
+    console.log('🎨 Tema aplicado:', theme);
 }
 
+// Función para alternar el tema
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
     const newTheme = current === 'dark' ? 'light' : 'dark';
+    console.log('🔄 Cambiando tema de', current, 'a', newTheme);
     setTheme(newTheme);
 }
 
-// Aplicar tema al cargar
-setTheme(getPreferredTheme());
+// =====================================================
+// INICIALIZAR TEMA AL CARGAR
+// =====================================================
 
-// Evento del botón
-if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
-}
+// Aplicar tema al cargar la página
+(function initTheme() {
+    const theme = getPreferredTheme();
+    setTheme(theme);
+})();
+
+// Esperar a que el DOM esté listo para asignar eventos
+document.addEventListener('DOMContentLoaded', function() {
+    // Buscar el botón de tema
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    if (themeToggle) {
+        console.log('✅ Botón de tema encontrado');
+        themeToggle.addEventListener('click', toggleTheme);
+    } else {
+        console.warn('⚠️ Botón de tema NO encontrado en el DOM');
+    }
+});
 
 // =====================================================
 // CARGAR DATOS
@@ -71,14 +130,35 @@ if (themeToggle) {
 
 async function cargarDatos() {
     try {
-        console.log('Cargando datos desde:', ARCHIVO_DATOS);
+        console.log('📡 Intentando cargar:', ARCHIVO_DATOS);
         const response = await fetch(ARCHIVO_DATOS);
-        if (!response.ok) throw new Error('Error al cargar los datos');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         todasLasPeliculas = await response.json();
-        console.log('Películas cargadas:', todasLasPeliculas.length);
+        console.log('✅ Películas cargadas:', todasLasPeliculas.length);
         return true;
     } catch (error) {
-        console.error('Error:', error);
+        console.error('❌ Error al cargar los datos:', error);
+        
+        // Intentar con ruta alternativa (sin la carpeta)
+        if (ARCHIVO_DATOS.includes('/catalogo/')) {
+            try {
+                const altPath = '/catalogo.json';
+                console.log('🔄 Intentando ruta alternativa:', altPath);
+                const response = await fetch(altPath);
+                if (response.ok) {
+                    todasLasPeliculas = await response.json();
+                    console.log('✅ Películas cargadas (ruta alternativa):', todasLasPeliculas.length);
+                    return true;
+                }
+            } catch (e) {
+                console.error('❌ También falló la ruta alternativa');
+            }
+        }
+        
         return false;
     }
 }
@@ -255,7 +335,7 @@ function cargarFiltros() {
 }
 
 // =====================================================
-// EVENTOS
+// EVENTOS DE FILTROS
 // =====================================================
 
 inputBuscar.addEventListener('input', filtrarPeliculas);
@@ -277,7 +357,10 @@ async function iniciar() {
             <div class="sin-resultados">
                 <h2>❌ Error al cargar los datos</h2>
                 <p>Archivo: ${ARCHIVO_DATOS}</p>
-                <p>Asegúrate de que el archivo catalogo.json existe</p>
+                <p>Verifica que el archivo <strong>catalogo.json</strong> existe en la carpeta</p>
+                <p style="font-size:0.8rem;margin-top:1rem;color:var(--text-muted);">
+                    Abre la consola (F12) para ver más detalles
+                </p>
             </div>
         `;
         loading.style.display = 'none';
