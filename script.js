@@ -2,7 +2,7 @@
 // CONFIGURACIÓN
 // =====================================================
 
-const ARCHIVO_DATOS = 'catalogo.json';
+const ARCHIVO_DATOS = './catalogo.json';
 
 let todasLasPeliculas = [];
 let peliculasFiltradas = [];
