@@ -18,6 +18,48 @@ const inputBuscar = document.getElementById('buscar');
 const selectGenero = document.getElementById('genero');
 const selectAnio = document.getElementById('anio');
 const selectOrden = document.getElementById('orden');
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = document.querySelector('.theme-icon');
+
+// =====================================================
+// TEMA (CLARO/OSCURO)
+// =====================================================
+
+function getPreferredTheme() {
+    // Verificar si hay una preferencia guardada
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    
+    // Verificar preferencia del sistema
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+    }
+    return 'dark';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    // Actualizar ícono
+    if (theme === 'dark') {
+        themeIcon.textContent = '🌙';
+    } else {
+        themeIcon.textContent = '☀️';
+    }
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+}
+
+// Aplicar tema al cargar
+setTheme(getPreferredTheme());
+
+// Evento del botón
+themeToggle.addEventListener('click', toggleTheme);
 
 // =====================================================
 // CARGAR DATOS
@@ -154,7 +196,7 @@ function renderizarPeliculas() {
 }
 
 // =====================================================
-// DETALLE DE PELÍCULA (Modal)
+// DETALLE DE PELÍCULA
 // =====================================================
 
 function verDetalle(index) {
@@ -169,7 +211,6 @@ function verDetalle(index) {
         pelicula.reparto.join(' · ') :
         'No disponible';
     
-    // Puedes usar un alert o crear un modal más elaborado
     alert(`
 🎬 ${pelicula.titulo_tmdb || pelicula.titulo}
 📅 ${pelicula.anio || 'Sin año'} | ⭐ ${pelicula.puntuacion > 0 ? pelicula.puntuacion.toFixed(1) : 'Sin puntuación'}
@@ -182,11 +223,10 @@ function verDetalle(index) {
 }
 
 // =====================================================
-// CARGAR FILTROS (Géneros y Años)
+// CARGAR FILTROS
 // =====================================================
 
 function cargarFiltros() {
-    // Obtener géneros únicos
     const generosSet = new Set();
     const aniosSet = new Set();
     
@@ -199,7 +239,6 @@ function cargarFiltros() {
         }
     });
     
-    // Ordenar géneros alfabéticamente
     const generos = Array.from(generosSet).sort();
     generos.forEach(genero => {
         const option = document.createElement('option');
@@ -208,7 +247,6 @@ function cargarFiltros() {
         selectGenero.appendChild(option);
     });
     
-    // Ordenar años (más reciente primero)
     const anios = Array.from(aniosSet).sort((a, b) => parseInt(b) - parseInt(a));
     anios.forEach(anio => {
         const option = document.createElement('option');
@@ -232,7 +270,6 @@ selectOrden.addEventListener('change', filtrarPeliculas);
 // =====================================================
 
 async function iniciar() {
-    // Mostrar loading
     loading.style.display = 'block';
     
     const cargado = await cargarDatos();
@@ -248,16 +285,10 @@ async function iniciar() {
         return;
     }
     
-    // Ocultar loading
     loading.style.display = 'none';
-    
-    // Cargar filtros
     cargarFiltros();
-    
-    // Mostrar todas
     filtrarPeliculas();
     
-    // Actualizar fecha
     const fecha = new Date();
     document.getElementById('fecha-actualizacion').textContent = fecha.toLocaleDateString('es-ES');
 }
