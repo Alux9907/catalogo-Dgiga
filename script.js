@@ -55,7 +55,7 @@ let todasLasPeliculas = [];
 let peliculasFiltradas = [];
 
 // =====================================================
-// MODAL - VERSIÓN MEJORADA PARA MÓVIL
+// MODAL - VERSIÓN CON IMAGEN DE FONDO
 // =====================================================
 
 function abrirModal(pelicula) {
@@ -89,81 +89,59 @@ function abrirModal(pelicula) {
     modalRuta.textContent = pelicula.ruta_relativa || 'Ruta no disponible';
     
     // =============================================
-    // PÓSTER - VERSIÓN MEJORADA PARA MÓVIL
+    // PÓSTER COMO IMAGEN DE FONDO
     // =============================================
     
-    // Mostrar placeholder inmediatamente
-    modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+    // Resetear el contenedor
+    modalPoster.className = 'modal-poster';
+    modalPoster.style.backgroundImage = 'none';
+    
+    const placeholder = modalPoster.querySelector('.poster-placeholder');
     
     if (pelicula.poster_url) {
-        // Intentar cargar con fetch (más fiable en móvil)
-        fetch(pelicula.poster_url)
-            .then(response => {
-                if (!response.ok) throw new Error('Error al cargar la imagen');
-                return response.blob();
-            })
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = pelicula.titulo_tmdb || pelicula.titulo;
-                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
-                
-                img.onload = () => {
-                    modalPoster.innerHTML = '';
-                    modalPoster.appendChild(img);
-                    URL.revokeObjectURL(url);
-                };
-                
-                img.onerror = () => {
-                    modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
-                    URL.revokeObjectURL(url);
-                };
-            })
-            .catch(() => {
-                // Fallback: cargar directamente con Image
-                const img = new Image();
-                img.alt = pelicula.titulo_tmdb || pelicula.titulo;
-                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
-                
-                let loaded = false;
-                
-                img.onload = () => {
-                    if (!loaded) {
-                        loaded = true;
-                        modalPoster.innerHTML = '';
-                        modalPoster.appendChild(img);
-                    }
-                };
-                
-                img.onerror = () => {
-                    if (!loaded) {
-                        loaded = true;
-                        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
-                    }
-                };
-                
-                // Timeout de seguridad
-                const timeoutId = setTimeout(() => {
-                    if (!loaded) {
-                        loaded = true;
-                        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
-                    }
-                }, 8000);
-                
-                // Sobrescribir onload para limpiar timeout
-                const originalOnload = img.onload;
-                img.onload = function(e) {
-                    clearTimeout(timeoutId);
-                    if (!loaded) {
-                        loaded = true;
-                        modalPoster.innerHTML = '';
-                        modalPoster.appendChild(this);
-                    }
-                };
-                
-                img.src = pelicula.poster_url;
-            });
+        // Crear una imagen invisible para precargar
+        const img = new Image();
+        let cargada = false;
+        
+        img.onload = function() {
+            if (!cargada) {
+                cargada = true;
+                // Aplicar la imagen como fondo
+                modalPoster.style.backgroundImage = `url('${pelicula.poster_url}')`;
+                modalPoster.classList.add('cargado');
+            }
+        };
+        
+        img.onerror = function() {
+            if (!cargada) {
+                cargada = true;
+                // Si falla, mostrar el placeholder
+                modalPoster.classList.add('sin-imagen');
+            }
+        };
+        
+        // Timeout de seguridad: si no carga en 8 segundos, mostrar placeholder
+        const timeoutId = setTimeout(() => {
+            if (!cargada) {
+                cargada = true;
+                modalPoster.classList.add('sin-imagen');
+            }
+        }, 8000);
+        
+        // Iniciar la carga de la imagen
+        img.src = pelicula.poster_url;
+        
+        // Si la imagen ya está en caché, el onload puede dispararse inmediatamente
+        if (img.complete && !cargada) {
+            cargada = true;
+            clearTimeout(timeoutId);
+            modalPoster.style.backgroundImage = `url('${pelicula.poster_url}')`;
+            modalPoster.classList.add('cargado');
+        }
+        
+    } else {
+        // Si no hay URL de póster, mostrar placeholder
+        modalPoster.classList.add('sin-imagen');
     }
     
     // Mostrar modal

@@ -528,6 +528,10 @@ footer {
     flex-wrap: wrap;
 }
 
+/* ============================================= */
+/* MODAL - PÓSTER COMO FONDO (MEJOR PARA MÓVIL) */
+/* ============================================= */
+
 .modal-poster {
     flex: 0 0 220px;
     border-radius: 12px;
@@ -535,26 +539,37 @@ footer {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     background: var(--bg-input);
     min-height: 200px;
+    aspect-ratio: 2/3;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 0.3s ease;
+    position: relative;
 }
 
-.modal-poster img {
+.modal-poster .poster-placeholder {
     width: 100%;
-    height: auto;
-    display: block;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-    background: var(--bg-input);
-}
-
-.modal-poster .sin-poster {
-    width: 100%;
-    aspect-ratio: 2/3;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 4rem;
     color: var(--text-muted);
     background: var(--bg-input);
+    transition: opacity 0.3s ease;
+}
+
+.modal-poster.cargado .poster-placeholder {
+    opacity: 0;
+}
+
+.modal-poster .poster-placeholder.hidden {
+    display: none;
+}
+
+/* Para depuración: si la imagen no carga, mostrar el placeholder */
+.modal-poster.sin-imagen .poster-placeholder {
+    opacity: 1;
 }
 
 .modal-info {
@@ -711,15 +726,10 @@ footer {
     .modal-poster {
         flex: 0 0 auto;
         max-width: 200px;
+        width: 100%;
         margin: 0 auto;
         min-height: 150px;
-    }
-    
-    .modal-poster img,
-    .modal-poster .sin-poster {
         aspect-ratio: 2/3;
-        width: 100%;
-        height: auto;
     }
     
     .modal-info h2 {
