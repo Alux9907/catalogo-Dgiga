@@ -2,26 +2,21 @@
 // CONFIGURACIÓN
 // =====================================================
 
-// Detectar automáticamente la ruta base
 function getBasePath() {
     const path = window.location.pathname;
     
-    // Si estamos en GitHub Pages (nombre del repo)
     if (path.includes('/catalogo-Dgiga/')) {
         return '/catalogo-Dgiga/';
     }
     
-    // Si estamos en local con XAMPP
     if (path.includes('/catalogo/')) {
         return '/catalogo/';
     }
     
-    // Si estamos en la raíz local (http://localhost/)
     if (path === '/' || path === '') {
         return '/';
     }
     
-    // Para otros casos, usar la ruta actual sin el nombre del archivo
     const partes = path.split('/');
     partes.pop();
     return partes.join('/') + '/';
@@ -70,49 +65,34 @@ const modalRuta = document.getElementById('modal-ruta');
 // =====================================================
 
 function abrirModal(pelicula) {
-    // Título
     modalTitulo.textContent = pelicula.titulo_tmdb || pelicula.titulo;
-    
-    // Año
     modalAnio.textContent = pelicula.anio || 'Sin año';
-    
-    // Duración
     modalDuracion.textContent = pelicula.duracion ? `${pelicula.duracion} min` : 'Duración desconocida';
-    
-    // Puntuación
     modalPuntuacion.textContent = pelicula.puntuacion > 0 ? `⭐ ${pelicula.puntuacion.toFixed(1)}` : '⭐ Sin puntuación';
     
-    // Géneros
     if (pelicula.generos && pelicula.generos.length > 0) {
         modalGeneros.innerHTML = pelicula.generos.map(g => `<span>${g}</span>`).join('');
     } else {
         modalGeneros.innerHTML = '<span>Sin género</span>';
     }
     
-    // Director
     modalDirector.textContent = pelicula.director || 'No disponible';
     
-    // Reparto
     if (pelicula.reparto && pelicula.reparto.length > 0) {
         modalReparto.textContent = pelicula.reparto.join(' · ');
     } else {
         modalReparto.textContent = 'No disponible';
     }
     
-    // Sinopsis
     modalSinopsis.textContent = pelicula.sinopsis || 'Sin sinopsis disponible';
-    
-    // Ruta
     modalRuta.textContent = pelicula.ruta_relativa || 'Ruta no disponible';
     
-    // Póster
     if (pelicula.poster_url) {
         modalPoster.innerHTML = `<img src="${pelicula.poster_url}" alt="${pelicula.titulo_tmdb || pelicula.titulo}">`;
     } else {
         modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
     }
     
-    // Mostrar modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -122,19 +102,16 @@ function cerrarModal() {
     document.body.style.overflow = '';
 }
 
-// Cerrar modal con botón
 if (modalClose) {
     modalClose.addEventListener('click', cerrarModal);
 }
 
-// Cerrar modal al hacer clic fuera del contenido
 modal.addEventListener('click', function(e) {
     if (e.target === modal) {
         cerrarModal();
     }
 });
 
-// Cerrar modal con Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && modal.classList.contains('active')) {
         cerrarModal();
@@ -147,17 +124,11 @@ document.addEventListener('keydown', function(e) {
 
 function getPreferredTheme() {
     const saved = localStorage.getItem('theme');
-    if (saved === 'dark' || saved === 'light') {
-        console.log('🌓 Tema desde localStorage:', saved);
-        return saved;
-    }
+    if (saved === 'dark' || saved === 'light') return saved;
     
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        console.log('🌓 Tema desde sistema: light');
         return 'light';
     }
-    
-    console.log('🌓 Tema por defecto: dark');
     return 'dark';
 }
 
@@ -167,37 +138,25 @@ function setTheme(theme) {
     
     const themeIcon = document.querySelector('.theme-icon');
     if (themeIcon) {
-        if (theme === 'dark') {
-            themeIcon.textContent = '🌙';
-        } else {
-            themeIcon.textContent = '☀️';
-        }
+        themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
     }
-    
-    console.log('🎨 Tema aplicado:', theme);
 }
 
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
     const newTheme = current === 'dark' ? 'light' : 'dark';
-    console.log('🔄 Cambiando tema de', current, 'a', newTheme);
     setTheme(newTheme);
 }
 
-// Aplicar tema al cargar
 (function initTheme() {
     const theme = getPreferredTheme();
     setTheme(theme);
 })();
 
-// Evento del botón de tema
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
-        console.log('✅ Botón de tema encontrado');
         themeToggle.addEventListener('click', toggleTheme);
-    } else {
-        console.warn('⚠️ Botón de tema NO encontrado');
     }
 });
 
@@ -219,22 +178,6 @@ async function cargarDatos() {
         return true;
     } catch (error) {
         console.error('❌ Error al cargar los datos:', error);
-        
-        if (ARCHIVO_DATOS.includes('/catalogo/')) {
-            try {
-                const altPath = '/catalogo.json';
-                console.log('🔄 Intentando ruta alternativa:', altPath);
-                const response = await fetch(altPath);
-                if (response.ok) {
-                    todasLasPeliculas = await response.json();
-                    console.log('✅ Películas cargadas (ruta alternativa):', todasLasPeliculas.length);
-                    return true;
-                }
-            } catch (e) {
-                console.error('❌ También falló la ruta alternativa');
-            }
-        }
-        
         return false;
     }
 }
@@ -350,7 +293,7 @@ function renderizarPeliculas() {
 }
 
 // =====================================================
-// DETALLE DE PELÍCULA (AHORA CON MODAL)
+// DETALLE DE PELÍCULA (CON MODAL)
 // =====================================================
 
 function verDetalle(index) {
@@ -394,7 +337,7 @@ function cargarFiltros() {
 }
 
 // =====================================================
-// EVENTOS DE FILTROS
+// EVENTOS
 // =====================================================
 
 inputBuscar.addEventListener('input', filtrarPeliculas);
@@ -416,10 +359,7 @@ async function iniciar() {
             <div class="sin-resultados">
                 <h2>❌ Error al cargar los datos</h2>
                 <p>Archivo: ${ARCHIVO_DATOS}</p>
-                <p>Verifica que el archivo <strong>catalogo.json</strong> existe en la carpeta</p>
-                <p style="font-size:0.8rem;margin-top:1rem;color:var(--text-muted);">
-                    Abre la consola (F12) para ver más detalles
-                </p>
+                <p>Verifica que el archivo <strong>catalogo.json</strong> existe</p>
             </div>
         `;
         loading.style.display = 'none';
@@ -434,5 +374,4 @@ async function iniciar() {
     document.getElementById('fecha-actualizacion').textContent = fecha.toLocaleDateString('es-ES');
 }
 
-// Iniciar
 iniciar();
