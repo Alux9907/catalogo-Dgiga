@@ -1,4 +1,7 @@
-/* Reset y estilos base */
+/* ============================================= */
+/* RESET Y ESTILOS BASE */
+/* ============================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,8 +10,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0e17;
-    color: #e0e0e0;
+    background: #f5f5f5;
+    color: #1a1a1a;
     min-height: 100vh;
 }
 
@@ -17,9 +20,9 @@ body {
 /* ============================================= */
 
 header {
-    background: linear-gradient(135deg, #0d1b2a, #1b2838);
+    background: #1a1a1a;
     padding: 1.5rem 1rem;
-    border-bottom: 2px solid #ff6b35;
+    border-bottom: 3px solid #e85d5d;
 }
 
 .header-container {
@@ -64,17 +67,15 @@ header {
 .header-texto h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(45deg, #ff6b35, #ff8c5a);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #e85d5d;
     margin: 0;
+    letter-spacing: -0.5px;
 }
 
 .header-texto p {
-    color: #8899aa;
+    color: #b0b0b0;
     font-size: 1.1rem;
     margin-top: 0.3rem;
-    -webkit-text-fill-color: #8899aa;
 }
 
 /* ============================================= */
@@ -84,46 +85,52 @@ header {
 main {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
 }
 
 /* ============================================= */
-/* FILTROS */
+/* FILTROS - Minimalistas */
 /* ============================================= */
 
 #filtros {
-    background: #151f2e;
-    padding: 1.5rem;
+    background: #ffffff;
+    padding: 1.5rem 2rem;
     border-radius: 12px;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
 }
 
 .filtro-busqueda {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .filtro-busqueda input {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 2px solid #2a3a4a;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #eaeaea;
     border-radius: 8px;
-    background: #0d1b2a;
-    color: #e0e0e0;
+    background: #fafafa;
+    color: #1a1a1a;
     font-size: 1rem;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .filtro-busqueda input:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #e85d5d;
+    box-shadow: 0 0 0 3px rgba(232, 93, 93, 0.12);
+}
+
+.filtro-busqueda input::placeholder {
+    color: #b0b0b0;
 }
 
 .filtros-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
 }
 
 .filtro {
@@ -133,42 +140,52 @@ main {
 }
 
 .filtro label {
-    font-size: 0.85rem;
-    color: #8899aa;
+    font-size: 0.75rem;
+    color: #888888;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 
 .filtro select {
     padding: 0.6rem 0.8rem;
-    border: 2px solid #2a3a4a;
+    border: 2px solid #eaeaea;
     border-radius: 8px;
-    background: #0d1b2a;
-    color: #e0e0e0;
+    background: #fafafa;
+    color: #1a1a1a;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    padding-right: 2.2rem;
 }
 
 .filtro select:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #e85d5d;
+    box-shadow: 0 0 0 3px rgba(232, 93, 93, 0.12);
+}
+
+.filtro select option {
+    background: #ffffff;
 }
 
 .resultados-info {
     text-align: center;
-    padding: 0.8rem;
-    background: #0d1b2a;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #8899aa;
+    padding: 0.6rem;
+    background: #fafafa;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #888888;
 }
 
 .resultados-info #contador {
-    color: #ff6b35;
+    color: #e85d5d;
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 /* ============================================= */
@@ -182,28 +199,28 @@ main {
 }
 
 /* ============================================= */
-/* TARJETA DE PELÍCULA */
+/* TARJETA DE PELÍCULA - Minimalista */
 /* ============================================= */
 
 .pelicula-card {
-    background: #151f2e;
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     cursor: pointer;
-    border: 1px solid #2a3a4a;
+    border: 1px solid #eaeaea;
 }
 
 .pelicula-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(255, 107, 53, 0.15);
-    border-color: #ff6b35;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border-color: #e85d5d;
 }
 
 .pelicula-card .poster {
     width: 100%;
     aspect-ratio: 2/3;
-    background: #0d1b2a;
+    background: #f0f0f0;
     overflow: hidden;
 }
 
@@ -211,11 +228,11 @@ main {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
 }
 
 .pelicula-card:hover .poster img {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .pelicula-card .poster .sin-poster {
@@ -225,44 +242,45 @@ main {
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    color: #2a3a4a;
-    background: linear-gradient(135deg, #0d1b2a, #1b2838);
+    color: #cccccc;
+    background: #f5f5f5;
 }
 
 .pelicula-card .info {
-    padding: 0.8rem 1rem;
+    padding: 0.8rem 1rem 1rem;
 }
 
 .pelicula-card .info .titulo {
     font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 0.3rem;
-    color: #e0e0e0;
+    margin-bottom: 0.2rem;
+    color: #1a1a1a;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.3;
 }
 
 .pelicula-card .info .anio {
     font-size: 0.8rem;
-    color: #8899aa;
+    color: #b0b0b0;
 }
 
 .pelicula-card .info .puntuacion {
     display: inline-block;
-    background: #ff6b35;
-    color: #fff;
+    background: #e85d5d;
+    color: #ffffff;
     font-size: 0.7rem;
-    font-weight: 700;
-    padding: 0.2rem 0.6rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
     border-radius: 4px;
-    margin-top: 0.3rem;
+    margin-top: 0.2rem;
 }
 
 .pelicula-card .info .generos {
     font-size: 0.7rem;
-    color: #8899aa;
+    color: #b0b0b0;
     margin-top: 0.3rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -277,22 +295,27 @@ main {
 .loading {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem;
+    padding: 4rem 2rem;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #1b2838;
-    border-top: 4px solid #ff6b35;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #eaeaea;
+    border-top: 3px solid #e85d5d;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
     margin: 0 auto 1rem;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    color: #b0b0b0;
+    font-size: 0.95rem;
 }
 
 /* ============================================= */
@@ -303,13 +326,18 @@ main {
     grid-column: 1 / -1;
     text-align: center;
     padding: 4rem 2rem;
-    color: #8899aa;
+    color: #b0b0b0;
 }
 
 .sin-resultados h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 0.5rem;
-    color: #e0e0e0;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.sin-resultados p {
+    color: #b0b0b0;
 }
 
 /* ============================================= */
@@ -319,10 +347,11 @@ main {
 footer {
     text-align: center;
     padding: 1.5rem;
-    color: #8899aa;
+    color: #b0b0b0;
     font-size: 0.8rem;
-    border-top: 1px solid #1b2838;
+    border-top: 1px solid #eaeaea;
     margin-top: 2rem;
+    background: #ffffff;
 }
 
 /* ============================================= */
@@ -342,6 +371,10 @@ footer {
     
     .header-texto h1 {
         font-size: 1.8rem;
+    }
+    
+    #filtros {
+        padding: 1rem;
     }
     
     #grid-peliculas {
