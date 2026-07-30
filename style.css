@@ -1,9 +1,9 @@
 /* ============================================= */
-/* VARIABLES CSS - Modo Oscuro (por defecto) */
+/* VARIABLES CSS */
 /* ============================================= */
 
 :root {
-    /* Colores base */
+    /* Colores base - Modo Oscuro */
     --bg-body: #0b0f1a;
     --bg-header: #0f1a2b;
     --bg-card: #151f2e;
@@ -12,6 +12,8 @@
     --bg-select: #0b0f1a;
     --bg-footer: #0b0f1a;
     --bg-hover-card: #1a2638;
+    --bg-modal-overlay: rgba(0, 0, 0, 0.75);
+    --bg-modal: #151f2e;
     
     /* Texto */
     --text-primary: #e8edf2;
@@ -20,33 +22,20 @@
     --text-input: #e8edf2;
     --text-card-title: #e8edf2;
     
-    /* Bordes */
-    --border-color: #2a3a4a;
-    --border-hover: #f44336;
-    
     /* Colores de acento */
     --color-primary: #f44336;
-    --color-primary-hover: #d32f2f;
     --color-primary-light: rgba(244, 67, 54, 0.15);
-    --color-primary-glow: rgba(244, 67, 54, 0.08);
     
-    /* Sombras */
+    /* Bordes y sombras */
+    --border-color: #2a3a4a;
+    --border-hover: #f44336;
     --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
     --shadow-card-hover: 0 8px 30px rgba(244, 67, 54, 0.12);
     --shadow-filtros: 0 4px 20px rgba(0, 0, 0, 0.4);
-    
-    /* Modal */
-    --bg-modal-overlay: rgba(0, 0, 0, 0.75);
-    --bg-modal: #151f2e;
-    
-    /* Misc */
     --spinner-color: #f44336;
 }
 
-/* ============================================= */
-/* MODO CLARO */
-/* ============================================= */
-
+/* Modo Claro */
 [data-theme="light"] {
     --bg-body: #f0f2f5;
     --bg-header: #ffffff;
@@ -56,6 +45,8 @@
     --bg-select: #f5f7fa;
     --bg-footer: #ffffff;
     --bg-hover-card: #f8f9fa;
+    --bg-modal-overlay: rgba(0, 0, 0, 0.5);
+    --bg-modal: #ffffff;
     
     --text-primary: #1a1a2e;
     --text-secondary: #5a6a7a;
@@ -64,18 +55,13 @@
     --text-card-title: #1a1a2e;
     
     --border-color: #dce1e8;
-    --border-hover: #f44336;
-    
     --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
     --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.08);
     --shadow-filtros: 0 2px 12px rgba(0, 0, 0, 0.06);
-    
-    --bg-modal-overlay: rgba(0, 0, 0, 0.5);
-    --bg-modal: #ffffff;
 }
 
 /* ============================================= */
-/* RESET Y ESTILOS BASE */
+/* RESET Y BASE */
 /* ============================================= */
 
 * {
@@ -93,7 +79,7 @@ body {
 }
 
 /* ============================================= */
-/* HEADER CON LOGO */
+/* HEADER */
 /* ============================================= */
 
 header {
@@ -152,10 +138,6 @@ header {
     transition: color 0.3s ease;
 }
 
-.header-texto h1 span {
-    color: var(--color-primary);
-}
-
 .header-texto p {
     color: var(--text-secondary);
     font-size: 1rem;
@@ -164,7 +146,7 @@ header {
 }
 
 /* ============================================= */
-/* BOTÓN DE TEMA (Claro/Oscuro) */
+/* BOTÓN DE TEMA */
 /* ============================================= */
 
 .theme-toggle {
@@ -187,13 +169,8 @@ header {
     transform: scale(1.05);
 }
 
-.theme-toggle .theme-icon {
-    line-height: 1;
-    transition: transform 0.3s ease;
-}
-
 /* ============================================= */
-/* MAIN Y CONTENEDOR */
+/* MAIN Y FILTROS */
 /* ============================================= */
 
 main {
@@ -201,10 +178,6 @@ main {
     margin: 0 auto;
     padding: 2rem 1.5rem;
 }
-
-/* ============================================= */
-/* FILTROS */
-/* ============================================= */
 
 #filtros {
     background: var(--bg-filtros);
@@ -398,7 +371,7 @@ main {
 .pelicula-card .info .puntuacion {
     display: inline-block;
     background: var(--color-primary);
-    color: #ffffff;
+    color: #fff;
     font-size: 0.7rem;
     font-weight: 600;
     padding: 0.15rem 0.6rem;
@@ -418,7 +391,7 @@ main {
 }
 
 /* ============================================= */
-/* LOADING */
+/* LOADING Y SIN RESULTADOS */
 /* ============================================= */
 
 .loading {
@@ -439,8 +412,7 @@ main {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to { transform: rotate(360deg); }
 }
 
 .loading p {
@@ -448,10 +420,6 @@ main {
     font-size: 0.95rem;
     transition: color 0.3s ease;
 }
-
-/* ============================================= */
-/* SIN RESULTADOS */
-/* ============================================= */
 
 .sin-resultados {
     grid-column: 1 / -1;
@@ -466,11 +434,6 @@ main {
     margin-bottom: 0.5rem;
     color: var(--text-primary);
     font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.sin-resultados p {
-    color: var(--text-secondary);
     transition: color 0.3s ease;
 }
 
@@ -490,7 +453,7 @@ footer {
 }
 
 /* ============================================= */
-/* MODAL - Estilos completos */
+/* MODAL */
 /* ============================================= */
 
 .modal {
@@ -547,7 +510,6 @@ footer {
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 1.8rem;
     padding: 4px;
     transition: color 0.2s ease, transform 0.2s ease;
     z-index: 10;
@@ -565,10 +527,6 @@ footer {
     padding: 2rem;
     flex-wrap: wrap;
 }
-
-/* ============================================= */
-/* MODAL - PÓSTER MEJORADO PARA MÓVIL */
-/* ============================================= */
 
 .modal-poster {
     flex: 0 0 220px;
@@ -718,35 +676,7 @@ footer {
 }
 
 /* ============================================= */
-/* MEJORAS PARA MÓVIL - MODAL */
-/* ============================================= */
-
-@media (max-width: 768px) {
-    .modal-poster {
-        flex: 0 0 auto;
-        max-width: 200px;
-        width: 100%;
-        margin: 0 auto;
-        min-height: 150px;
-    }
-    
-    .modal-poster img,
-    .modal-poster .sin-poster {
-        aspect-ratio: 2/3;
-        width: 100%;
-        height: auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .modal-poster {
-        max-width: 160px;
-        min-height: 120px;
-    }
-}
-
-/* ============================================= */
-/* RESPONSIVE GENERAL */
+/* RESPONSIVE */
 /* ============================================= */
 
 @media (max-width: 768px) {
@@ -782,6 +712,14 @@ footer {
         flex: 0 0 auto;
         max-width: 200px;
         margin: 0 auto;
+        min-height: 150px;
+    }
+    
+    .modal-poster img,
+    .modal-poster .sin-poster {
+        aspect-ratio: 2/3;
+        width: 100%;
+        height: auto;
     }
     
     .modal-info h2 {
@@ -789,15 +727,10 @@ footer {
         text-align: center;
     }
     
-    .modal-metadata {
-        justify-content: center;
-    }
-    
-    .modal-generos {
-        justify-content: center;
-    }
-    
+    .modal-metadata,
+    .modal-generos,
     .modal-crew {
+        justify-content: center;
         text-align: center;
     }
     
@@ -829,13 +762,13 @@ footer {
         padding: 1rem;
     }
     
+    .filtros-group {
+        grid-template-columns: 1fr;
+    }
+    
     #grid-peliculas {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 1rem;
-    }
-    
-    .filtros-group {
-        grid-template-columns: 1fr;
     }
     
     .header-texto h1 {
@@ -858,6 +791,7 @@ footer {
     
     .modal-poster {
         max-width: 150px;
+        min-height: 120px;
     }
     
     .modal-info h2 {
@@ -867,6 +801,12 @@ footer {
     .modal-close {
         top: 8px;
         right: 12px;
-        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-poster {
+        max-width: 130px;
+        min-height: 100px;
     }
 }

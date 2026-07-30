@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 DGIGA - Catálogo de Películas</title>
-    <link rel="icon" type="image/png" href="SIMPLIFICADO2.png">
+    <title>DGIGA · Catálogo de Películas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="header-container">
             <div class="logo-container">
-                <img src="NEGATIVO.png" alt="Logo" class="logo logo-sombra">
-                <img src="COLOR.png" alt="Logo" class="logo logo-principal">
+                <img src="NEGATIVO.png" alt="Logo" class="logo logo-sombra" loading="lazy">
+                <img src="COLOR.png" alt="Logo" class="logo logo-principal" loading="lazy">
             </div>
             <div class="header-texto">
                 <h1>DGIGA · Catálogo</h1>
@@ -28,7 +27,7 @@
         <!-- Filtros -->
         <section id="filtros">
             <div class="filtro-busqueda">
-                <input type="text" id="buscar" placeholder="🔍 Buscar película...">
+                <input type="text" id="buscar" placeholder="🔍 Buscar película..." aria-label="Buscar películas">
             </div>
             
             <div class="filtros-group">
@@ -72,10 +71,8 @@
         </section>
     </main>
 
-    <!-- ============================================= -->
-    <!-- MODAL DE DETALLE DE PELÍCULA -->
-    <!-- ============================================= -->
-    <div id="modal" class="modal">
+    <!-- Modal de detalle -->
+    <div id="modal" class="modal" role="dialog" aria-modal="true">
         <div class="modal-content">
             <button id="modal-close" class="modal-close" aria-label="Cerrar">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -99,22 +96,20 @@
                         <span id="modal-puntuacion">⭐ 0.0</span>
                     </div>
                     
-                    <div class="modal-generos" id="modal-generos">
-                        Géneros
-                    </div>
+                    <div class="modal-generos" id="modal-generos"></div>
                     
                     <div class="modal-crew">
-                        <p><strong>Director:</strong> <span id="modal-director">Director</span></p>
-                        <p><strong>Reparto:</strong> <span id="modal-reparto">Reparto</span></p>
+                        <p><strong>Director:</strong> <span id="modal-director">—</span></p>
+                        <p><strong>Reparto:</strong> <span id="modal-reparto">—</span></p>
                     </div>
                     
                     <div class="modal-sinopsis">
                         <h4>Sinopsis</h4>
-                        <p id="modal-sinopsis">Sinopsis de la película</p>
+                        <p id="modal-sinopsis">Sin sinopsis disponible</p>
                     </div>
                     
                     <div class="modal-ruta">
-                        <p><strong>Ubicación:</strong> <span id="modal-ruta">Ruta</span></p>
+                        <p><strong>Ubicación:</strong> <span id="modal-ruta">—</span></p>
                     </div>
                 </div>
             </div>
