@@ -65,34 +65,102 @@ const modalRuta = document.getElementById('modal-ruta');
 // =====================================================
 
 function abrirModal(pelicula) {
+    // Título
     modalTitulo.textContent = pelicula.titulo_tmdb || pelicula.titulo;
+    
+    // Año
     modalAnio.textContent = pelicula.anio || 'Sin año';
+    
+    // Duración
     modalDuracion.textContent = pelicula.duracion ? `${pelicula.duracion} min` : 'Duración desconocida';
+    
+    // Puntuación
     modalPuntuacion.textContent = pelicula.puntuacion > 0 ? `⭐ ${pelicula.puntuacion.toFixed(1)}` : '⭐ Sin puntuación';
     
+    // Géneros
     if (pelicula.generos && pelicula.generos.length > 0) {
         modalGeneros.innerHTML = pelicula.generos.map(g => `<span>${g}</span>`).join('');
     } else {
         modalGeneros.innerHTML = '<span>Sin género</span>';
     }
     
+    // Director
     modalDirector.textContent = pelicula.director || 'No disponible';
     
+    // Reparto
     if (pelicula.reparto && pelicula.reparto.length > 0) {
         modalReparto.textContent = pelicula.reparto.join(' · ');
     } else {
         modalReparto.textContent = 'No disponible';
     }
     
+    // Sinopsis
     modalSinopsis.textContent = pelicula.sinopsis || 'Sin sinopsis disponible';
+    
+    // Ruta
     modalRuta.textContent = pelicula.ruta_relativa || 'Ruta no disponible';
     
+    // =============================================
+    // PÓSTER - VERSIÓN MEJORADA PARA MÓVIL
+    // =============================================
+    
+    // Primero, mostrar un placeholder mientras carga
+    modalPoster.innerHTML = `
+        <div class="sin-poster" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--bg-input);font-size:3rem;color:var(--text-muted);">
+            🎬
+        </div>
+    `;
+    
     if (pelicula.poster_url) {
-        modalPoster.innerHTML = `<img src="${pelicula.poster_url}" alt="${pelicula.titulo_tmdb || pelicula.titulo}">`;
+        // Crear una nueva imagen para asegurar que se cargue correctamente
+        const img = new Image();
+        img.alt = pelicula.titulo_tmdb || pelicula.titulo;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.display = 'block';
+        
+        // Cuando la imagen se carga, la mostramos
+        img.onload = function() {
+            modalPoster.innerHTML = '';
+            modalPoster.appendChild(img);
+        };
+        
+        // Si hay error al cargar, mostramos el placeholder
+        img.onerror = function() {
+            modalPoster.innerHTML = `
+                <div class="sin-poster" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--bg-input);font-size:3rem;color:var(--text-muted);">
+                    🎬
+                </div>
+            `;
+        };
+        
+        // Iniciar la carga de la imagen
+        img.src = pelicula.poster_url;
+        
+        // Fallback: Si la imagen no se carga en 5 segundos, mostrar placeholder
+        setTimeout(() => {
+            // Si después de 5 segundos el poster sigue siendo el placeholder
+            const currentContent = modalPoster.innerHTML;
+            if (currentContent.includes('sin-poster') || currentContent === '') {
+                modalPoster.innerHTML = `
+                    <div class="sin-poster" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--bg-input);font-size:3rem;color:var(--text-muted);">
+                        🎬
+                    </div>
+                `;
+            }
+        }, 5000);
+        
     } else {
-        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+        // Si no hay URL de póster, mostrar placeholder
+        modalPoster.innerHTML = `
+            <div class="sin-poster" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--bg-input);font-size:3rem;color:var(--text-muted);">
+                🎬
+            </div>
+        `;
     }
     
+    // Mostrar modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -124,7 +192,9 @@ document.addEventListener('keydown', function(e) {
 
 function getPreferredTheme() {
     const saved = localStorage.getItem('theme');
-    if (saved === 'dark' || saved === 'light') return saved;
+    if (saved === 'dark' || saved === 'light') {
+        return saved;
+    }
     
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
         return 'light';

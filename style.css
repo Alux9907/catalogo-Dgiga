@@ -566,11 +566,17 @@ footer {
     flex-wrap: wrap;
 }
 
+/* ============================================= */
+/* MODAL - PÓSTER MEJORADO PARA MÓVIL */
+/* ============================================= */
+
 .modal-poster {
     flex: 0 0 220px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: var(--bg-input);
+    min-height: 200px;
 }
 
 .modal-poster img {
@@ -712,7 +718,35 @@ footer {
 }
 
 /* ============================================= */
-/* RESPONSIVE */
+/* MEJORAS PARA MÓVIL - MODAL */
+/* ============================================= */
+
+@media (max-width: 768px) {
+    .modal-poster {
+        flex: 0 0 auto;
+        max-width: 200px;
+        width: 100%;
+        margin: 0 auto;
+        min-height: 150px;
+    }
+    
+    .modal-poster img,
+    .modal-poster .sin-poster {
+        aspect-ratio: 2/3;
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-poster {
+        max-width: 160px;
+        min-height: 120px;
+    }
+}
+
+/* ============================================= */
+/* RESPONSIVE GENERAL */
 /* ============================================= */
 
 @media (max-width: 768px) {
@@ -739,7 +773,6 @@ footer {
         font-size: 1.1rem;
     }
     
-    /* Modal responsive */
     .modal-body {
         flex-direction: column;
         padding: 1.5rem;
@@ -809,7 +842,6 @@ footer {
         font-size: 1.4rem;
     }
     
-    /* Modal responsive móvil */
     .modal {
         padding: 0.5rem;
     }
