@@ -23,7 +23,7 @@ function getBasePath() {
     
     // Para otros casos, usar la ruta actual sin el nombre del archivo
     const partes = path.split('/');
-    partes.pop(); // Eliminar el nombre del archivo (index.html o vacío)
+    partes.pop();
     return partes.join('/') + '/';
 }
 
@@ -49,38 +49,122 @@ const selectAnio = document.getElementById('anio');
 const selectOrden = document.getElementById('orden');
 
 // =====================================================
-// TEMA (CLARO/OSCURO) - VERSIÓN MEJORADA
+// MODAL - DOM Elements
 // =====================================================
 
-// Función para obtener el tema preferido
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const modalPoster = document.getElementById('modal-poster');
+const modalTitulo = document.getElementById('modal-titulo');
+const modalAnio = document.getElementById('modal-anio');
+const modalDuracion = document.getElementById('modal-duracion');
+const modalPuntuacion = document.getElementById('modal-puntuacion');
+const modalGeneros = document.getElementById('modal-generos');
+const modalDirector = document.getElementById('modal-director');
+const modalReparto = document.getElementById('modal-reparto');
+const modalSinopsis = document.getElementById('modal-sinopsis');
+const modalRuta = document.getElementById('modal-ruta');
+
+// =====================================================
+// MODAL - Funciones
+// =====================================================
+
+function abrirModal(pelicula) {
+    // Título
+    modalTitulo.textContent = pelicula.titulo_tmdb || pelicula.titulo;
+    
+    // Año
+    modalAnio.textContent = pelicula.anio || 'Sin año';
+    
+    // Duración
+    modalDuracion.textContent = pelicula.duracion ? `${pelicula.duracion} min` : 'Duración desconocida';
+    
+    // Puntuación
+    modalPuntuacion.textContent = pelicula.puntuacion > 0 ? `⭐ ${pelicula.puntuacion.toFixed(1)}` : '⭐ Sin puntuación';
+    
+    // Géneros
+    if (pelicula.generos && pelicula.generos.length > 0) {
+        modalGeneros.innerHTML = pelicula.generos.map(g => `<span>${g}</span>`).join('');
+    } else {
+        modalGeneros.innerHTML = '<span>Sin género</span>';
+    }
+    
+    // Director
+    modalDirector.textContent = pelicula.director || 'No disponible';
+    
+    // Reparto
+    if (pelicula.reparto && pelicula.reparto.length > 0) {
+        modalReparto.textContent = pelicula.reparto.join(' · ');
+    } else {
+        modalReparto.textContent = 'No disponible';
+    }
+    
+    // Sinopsis
+    modalSinopsis.textContent = pelicula.sinopsis || 'Sin sinopsis disponible';
+    
+    // Ruta
+    modalRuta.textContent = pelicula.ruta_relativa || 'Ruta no disponible';
+    
+    // Póster
+    if (pelicula.poster_url) {
+        modalPoster.innerHTML = `<img src="${pelicula.poster_url}" alt="${pelicula.titulo_tmdb || pelicula.titulo}">`;
+    } else {
+        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+    }
+    
+    // Mostrar modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Cerrar modal con botón
+if (modalClose) {
+    modalClose.addEventListener('click', cerrarModal);
+}
+
+// Cerrar modal al hacer clic fuera del contenido
+modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+        cerrarModal();
+    }
+});
+
+// Cerrar modal con Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+        cerrarModal();
+    }
+});
+
+// =====================================================
+// TEMA (CLARO/OSCURO)
+// =====================================================
+
 function getPreferredTheme() {
-    // 1. Verificar si hay una preferencia guardada en localStorage
     const saved = localStorage.getItem('theme');
     if (saved === 'dark' || saved === 'light') {
         console.log('🌓 Tema desde localStorage:', saved);
         return saved;
     }
     
-    // 2. Verificar preferencia del sistema
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
         console.log('🌓 Tema desde sistema: light');
         return 'light';
     }
     
-    // 3. Por defecto, oscuro
     console.log('🌓 Tema por defecto: dark');
     return 'dark';
 }
 
-// Función para aplicar el tema
 function setTheme(theme) {
-    // Aplicar el tema al HTML
     document.documentElement.setAttribute('data-theme', theme);
-    
-    // Guardar en localStorage
     localStorage.setItem('theme', theme);
     
-    // Actualizar el ícono del botón
     const themeIcon = document.querySelector('.theme-icon');
     if (themeIcon) {
         if (theme === 'dark') {
@@ -93,7 +177,6 @@ function setTheme(theme) {
     console.log('🎨 Tema aplicado:', theme);
 }
 
-// Función para alternar el tema
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
     const newTheme = current === 'dark' ? 'light' : 'dark';
@@ -101,26 +184,20 @@ function toggleTheme() {
     setTheme(newTheme);
 }
 
-// =====================================================
-// INICIALIZAR TEMA AL CARGAR
-// =====================================================
-
-// Aplicar tema al cargar la página
+// Aplicar tema al cargar
 (function initTheme() {
     const theme = getPreferredTheme();
     setTheme(theme);
 })();
 
-// Esperar a que el DOM esté listo para asignar eventos
+// Evento del botón de tema
 document.addEventListener('DOMContentLoaded', function() {
-    // Buscar el botón de tema
     const themeToggle = document.getElementById('theme-toggle');
-    
     if (themeToggle) {
         console.log('✅ Botón de tema encontrado');
         themeToggle.addEventListener('click', toggleTheme);
     } else {
-        console.warn('⚠️ Botón de tema NO encontrado en el DOM');
+        console.warn('⚠️ Botón de tema NO encontrado');
     }
 });
 
@@ -143,7 +220,6 @@ async function cargarDatos() {
     } catch (error) {
         console.error('❌ Error al cargar los datos:', error);
         
-        // Intentar con ruta alternativa (sin la carpeta)
         if (ARCHIVO_DATOS.includes('/catalogo/')) {
             try {
                 const altPath = '/catalogo.json';
@@ -243,7 +319,7 @@ function renderizarPeliculas() {
     
     let html = '';
     
-    peliculasFiltradas.forEach(pelicula => {
+    peliculasFiltradas.forEach((pelicula, index) => {
         const poster = pelicula.poster_url ? 
             `<img src="${pelicula.poster_url}" alt="${pelicula.titulo_tmdb || pelicula.titulo}" loading="lazy">` :
             `<div class="sin-poster">🎬</div>`;
@@ -257,7 +333,7 @@ function renderizarPeliculas() {
             '';
         
         html += `
-            <div class="pelicula-card" onclick="verDetalle(${peliculasFiltradas.indexOf(pelicula)})">
+            <div class="pelicula-card" onclick="verDetalle(${index})">
                 <div class="poster">
                     ${poster}
                 </div>
@@ -274,30 +350,13 @@ function renderizarPeliculas() {
 }
 
 // =====================================================
-// DETALLE DE PELÍCULA
+// DETALLE DE PELÍCULA (AHORA CON MODAL)
 // =====================================================
 
 function verDetalle(index) {
     const pelicula = peliculasFiltradas[index];
     if (!pelicula) return;
-    
-    const generos = pelicula.generos && pelicula.generos.length > 0 ?
-        pelicula.generos.join(' · ') :
-        'Sin género';
-    
-    const reparto = pelicula.reparto && pelicula.reparto.length > 0 ?
-        pelicula.reparto.join(' · ') :
-        'No disponible';
-    
-    alert(`
-🎬 ${pelicula.titulo_tmdb || pelicula.titulo}
-📅 ${pelicula.anio || 'Sin año'} | ⭐ ${pelicula.puntuacion > 0 ? pelicula.puntuacion.toFixed(1) : 'Sin puntuación'}
-🎭 ${generos}
-👤 Director: ${pelicula.director || 'No disponible'}
-🎭 Reparto: ${reparto}
-⏱️ Duración: ${pelicula.duracion ? `${pelicula.duracion} min` : 'No disponible'}
-📝 ${pelicula.sinopsis || 'Sin sinopsis disponible'}
-    `);
+    abrirModal(pelicula);
 }
 
 // =====================================================

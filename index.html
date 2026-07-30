@@ -72,6 +72,55 @@
         </section>
     </main>
 
+    <!-- ============================================= -->
+    <!-- MODAL DE DETALLE DE PELÍCULA -->
+    <!-- ============================================= -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button id="modal-close" class="modal-close" aria-label="Cerrar">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <div class="modal-body">
+                <div class="modal-poster">
+                    <img id="modal-poster" src="" alt="Póster">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-titulo">Título</h2>
+                    
+                    <div class="modal-metadata">
+                        <span id="modal-anio">Año</span>
+                        <span class="modal-separator">•</span>
+                        <span id="modal-duracion">Duración</span>
+                        <span class="modal-separator">•</span>
+                        <span id="modal-puntuacion">⭐ 0.0</span>
+                    </div>
+                    
+                    <div class="modal-generos" id="modal-generos">
+                        Géneros
+                    </div>
+                    
+                    <div class="modal-crew">
+                        <p><strong>Director:</strong> <span id="modal-director">Director</span></p>
+                        <p><strong>Reparto:</strong> <span id="modal-reparto">Reparto</span></p>
+                    </div>
+                    
+                    <div class="modal-sinopsis">
+                        <h4>Sinopsis</h4>
+                        <p id="modal-sinopsis">Sinopsis de la película</p>
+                    </div>
+                    
+                    <div class="modal-ruta">
+                        <p><strong>Ubicación:</strong> <span id="modal-ruta">Ruta</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>DGIGA · Catálogo de películas — Actualizado: <span id="fecha-actualizacion"></span></p>
     </footer>
