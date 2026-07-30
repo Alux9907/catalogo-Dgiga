@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Mi Catálogo de Películas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🎬 Mi Catálogo de Películas</h1>
+        <p>Selecciona, busca y explora nuestra colección</p>
+    </header>
+
+    <main>
+        <!-- Filtros -->
+        <section id="filtros">
+            <div class="filtro-busqueda">
+                <input type="text" id="buscar" placeholder="🔍 Buscar película...">
+            </div>
+            
+            <div class="filtros-group">
+                <div class="filtro">
+                    <label for="genero">🎭 Género</label>
+                    <select id="genero">
+                        <option value="">Todos los géneros</option>
+                    </select>
+                </div>
+                
+                <div class="filtro">
+                    <label for="anio">📅 Año</label>
+                    <select id="anio">
+                        <option value="">Todos los años</option>
+                    </select>
+                </div>
+                
+                <div class="filtro">
+                    <label for="orden">📊 Ordenar por</label>
+                    <select id="orden">
+                        <option value="titulo">Título (A-Z)</option>
+                        <option value="titulo_desc">Título (Z-A)</option>
+                        <option value="anio">Año (más reciente)</option>
+                        <option value="anio_asc">Año (más antiguo)</option>
+                        <option value="puntuacion">Puntuación (mayor)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="resultados-info">
+                <span id="contador">0</span> películas encontradas
+            </div>
+        </section>
+
+        <!-- Grid de películas -->
+        <section id="grid-peliculas">
+            <!-- Las películas se cargarán aquí con JavaScript -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Cargando catálogo...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Catálogo de películas - Actualizado: <span id="fecha-actualizacion"></span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
