@@ -55,53 +55,118 @@ let todasLasPeliculas = [];
 let peliculasFiltradas = [];
 
 // =====================================================
-// MODAL
+// MODAL - VERSIÓN MEJORADA PARA MÓVIL
 // =====================================================
 
 function abrirModal(pelicula) {
+    // Título
     modalTitulo.textContent = pelicula.titulo_tmdb || pelicula.titulo;
+    
+    // Año
     modalAnio.textContent = pelicula.anio || 'Sin año';
+    
+    // Duración
     modalDuracion.textContent = pelicula.duracion ? `${pelicula.duracion} min` : 'Duración desconocida';
+    
+    // Puntuación
     modalPuntuacion.textContent = pelicula.puntuacion > 0 ? `⭐ ${pelicula.puntuacion.toFixed(1)}` : '⭐ Sin puntuación';
     
+    // Géneros
     modalGeneros.innerHTML = (pelicula.generos?.length) 
         ? pelicula.generos.map(g => `<span>${g}</span>`).join('') 
         : '<span>Sin género</span>';
     
+    // Director
     modalDirector.textContent = pelicula.director || 'No disponible';
+    
+    // Reparto
     modalReparto.textContent = pelicula.reparto?.length ? pelicula.reparto.join(' · ') : 'No disponible';
+    
+    // Sinopsis
     modalSinopsis.textContent = pelicula.sinopsis || 'Sin sinopsis disponible';
+    
+    // Ruta
     modalRuta.textContent = pelicula.ruta_relativa || 'Ruta no disponible';
     
-    // Poster
-    modalPoster.innerHTML = `
-        <div class="sin-poster">🎬</div>
-    `;
+    // =============================================
+    // PÓSTER - VERSIÓN MEJORADA PARA MÓVIL
+    // =============================================
+    
+    // Mostrar placeholder inmediatamente
+    modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
     
     if (pelicula.poster_url) {
-        const img = new Image();
-        img.alt = pelicula.titulo_tmdb || pelicula.titulo;
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
-        
-        img.onload = () => {
-            modalPoster.innerHTML = '';
-            modalPoster.appendChild(img);
-        };
-        
-        img.onerror = () => {
-            modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
-        };
-        
-        img.src = pelicula.poster_url;
-        
-        // Fallback: si no carga en 5s
-        setTimeout(() => {
-            if (modalPoster.querySelector('.sin-poster') || !modalPoster.firstChild) {
-                modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
-            }
-        }, 5000);
+        // Intentar cargar con fetch (más fiable en móvil)
+        fetch(pelicula.poster_url)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar la imagen');
+                return response.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = pelicula.titulo_tmdb || pelicula.titulo;
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+                
+                img.onload = () => {
+                    modalPoster.innerHTML = '';
+                    modalPoster.appendChild(img);
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.onerror = () => {
+                    modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+                    URL.revokeObjectURL(url);
+                };
+            })
+            .catch(() => {
+                // Fallback: cargar directamente con Image
+                const img = new Image();
+                img.alt = pelicula.titulo_tmdb || pelicula.titulo;
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+                
+                let loaded = false;
+                
+                img.onload = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        modalPoster.innerHTML = '';
+                        modalPoster.appendChild(img);
+                    }
+                };
+                
+                img.onerror = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+                    }
+                };
+                
+                // Timeout de seguridad
+                const timeoutId = setTimeout(() => {
+                    if (!loaded) {
+                        loaded = true;
+                        modalPoster.innerHTML = `<div class="sin-poster">🎬</div>`;
+                    }
+                }, 8000);
+                
+                // Sobrescribir onload para limpiar timeout
+                const originalOnload = img.onload;
+                img.onload = function(e) {
+                    clearTimeout(timeoutId);
+                    if (!loaded) {
+                        loaded = true;
+                        modalPoster.innerHTML = '';
+                        modalPoster.appendChild(this);
+                    }
+                };
+                
+                img.src = pelicula.poster_url;
+            });
     }
     
+    // Mostrar modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -245,7 +310,7 @@ function renderizarPeliculas() {
 }
 
 // =====================================================
-// DETALLE (desde onclick)
+// DETALLE
 // =====================================================
 
 window.verDetalle = function(index) {
@@ -254,7 +319,7 @@ window.verDetalle = function(index) {
 };
 
 // =====================================================
-// FILTROS (dropdowns)
+// FILTROS
 // =====================================================
 
 function cargarFiltros() {
