@@ -2,7 +2,12 @@
 // CONFIGURACIÓN
 // =====================================================
 
-const ARCHIVO_DATOS = './catalogo.json';
+// Detectar automáticamente la ruta base
+const rutaBase = window.location.pathname.includes('/catalogo-Dgiga/') 
+    ? '/catalogo-Dgiga/' 
+    : '/';
+
+const ARCHIVO_DATOS = rutaBase + 'catalogo.json';
 
 let todasLasPeliculas = [];
 let peliculasFiltradas = [];
@@ -26,11 +31,9 @@ const themeIcon = document.querySelector('.theme-icon');
 // =====================================================
 
 function getPreferredTheme() {
-    // Verificar si hay una preferencia guardada
     const saved = localStorage.getItem('theme');
     if (saved) return saved;
     
-    // Verificar preferencia del sistema
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
         return 'light';
     }
@@ -41,7 +44,6 @@ function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     
-    // Actualizar ícono
     if (theme === 'dark') {
         themeIcon.textContent = '🌙';
     } else {
@@ -59,7 +61,9 @@ function toggleTheme() {
 setTheme(getPreferredTheme());
 
 // Evento del botón
-themeToggle.addEventListener('click', toggleTheme);
+if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+}
 
 // =====================================================
 // CARGAR DATOS
@@ -67,9 +71,11 @@ themeToggle.addEventListener('click', toggleTheme);
 
 async function cargarDatos() {
     try {
+        console.log('Cargando datos desde:', ARCHIVO_DATOS);
         const response = await fetch(ARCHIVO_DATOS);
         if (!response.ok) throw new Error('Error al cargar los datos');
         todasLasPeliculas = await response.json();
+        console.log('Películas cargadas:', todasLasPeliculas.length);
         return true;
     } catch (error) {
         console.error('Error:', error);
@@ -87,7 +93,6 @@ function filtrarPeliculas() {
     const anioSeleccionado = selectAnio.value;
     
     peliculasFiltradas = todasLasPeliculas.filter(pelicula => {
-        // Búsqueda por texto
         if (textoBusqueda) {
             const titulo = pelicula.titulo_tmdb?.toLowerCase() || '';
             const tituloOriginal = pelicula.titulo?.toLowerCase() || '';
@@ -100,12 +105,10 @@ function filtrarPeliculas() {
             if (!busquedaMatch) return false;
         }
         
-        // Filtro por género
         if (generoSeleccionado && pelicula.generos) {
             if (!pelicula.generos.includes(generoSeleccionado)) return false;
         }
         
-        // Filtro por año
         if (anioSeleccionado) {
             if (pelicula.anio !== anioSeleccionado) return false;
         }
@@ -113,13 +116,8 @@ function filtrarPeliculas() {
         return true;
     });
     
-    // Aplicar ordenamiento
     ordenarPeliculas();
-    
-    // Actualizar contador
     contador.textContent = peliculasFiltradas.length;
-    
-    // Renderizar
     renderizarPeliculas();
 }
 
@@ -278,7 +276,8 @@ async function iniciar() {
         grid.innerHTML = `
             <div class="sin-resultados">
                 <h2>❌ Error al cargar los datos</h2>
-                <p>Asegúrate de que el archivo ${ARCHIVO_DATOS} existe</p>
+                <p>Archivo: ${ARCHIVO_DATOS}</p>
+                <p>Asegúrate de que el archivo catalogo.json existe</p>
             </div>
         `;
         loading.style.display = 'none';
